@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Material 🔥</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #fff; font-family: sans-serif; }
+    
+    .header {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      padding: 16px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+    .header h1 { font-size: 20px; color: #e94560; }
+    .header p { font-size: 12px; color: #888; margin-top: 4px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .card {
+      background: #1a1a2e;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid #222;
+      transition: transform 0.2s;
+    }
+    .card:active { transform: scale(0.97); }
+
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .card-info {
+      padding: 8px;
+    }
+    .card-info p {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .play-btn {
+      width: 100%;
+      background: #16213e;
+      border: 1px solid #e94560;
+      color: #e94560;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* Unlock Modal */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .overlay.show { display: flex; }
+
+    .modal {
+      background: #1a1a2e;
+      border-radius: 16px;
+      padding: 24px;
+      width: 85%;
+      text-align: center;
+      border: 1px solid #e94560;
+    }
+    .modal .icon { font-size: 48px; margin-bottom: 12px; }
+    .modal h2 { color: #e94560; font-size: 22px; margin-bottom: 8px; }
+    .modal p { color: #aaa; font-size: 13px; margin-bottom: 16px; }
+
+    .modal .link-box {
+      background: #0a0a0a;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 11px;
+      color: #4fc3f7;
+      word-break: break-all;
+      margin-bottom: 16px;
+    }
+
+    .open-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #e94560, #c62a47);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .dismiss-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .countdown {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📚 Study Material</h1>
+  <p>Premium content — unlock karo free mein</p>
+</div>
+
+<div class="grid" id="videoGrid">
+  <p style="color:#666; padding:20px;">Loading...</p>
+</div>
+
+<!-- Unlock Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="icon">🔓</div>
+    <h2>Unlocked!</h2>
+    <p>Your video link is ready</p>
+    <div class="link-box" id="linkBox">...</div>
+    <button class="open-btn" id="openBtn">🚀 Open in App</button>
+    <br>
+    <button class="dismiss-btn" onclick="closeModal()">Dismiss</button>
+  </div>
+</div>
+
+<script>
+  const BOT_USERNAME = "Filebot69_bot";
+  let currentToken = "";
+  let countdownTimer = null;
+
+  // Load videos
+  fetch('videos.json')
+    .then(r => r.json())
+    .then(videos => {
+      const grid = document.getElementById('videoGrid');
+      grid.innerHTML = '';
+      videos.forEach(v => {
+        grid.innerHTML += `
+          <div class="card" onclick="playVideo('${v.token}')">
+            <img src="${v.thumbnail}" onerror="this.src='https://via.placeholder.com/300x160/1a1a2e/e94560?text=🔥'">
+            <div class="card-info">
+              <p>${v.title}</p>
+              <button class="play-btn">▶ Play</button>
+            </div>
+          </div>
+        `;
+      });
+    });
+
+  function playVideo(token) {
+    currentToken = token;
+    // Monetag ad trigger yahan aayega
+    triggerAd(token);
+  }
+
+  function triggerAd(token) {
+    // Monetag script yahan inject hoga
+    // Abhi direct unlock show ho raha hai
+    showUnlock(token);
+  }
+
+  function showUnlock(token) {
+    const link = `https://t.me/${BOT_USERNAME}?start=${token}`;
+    document.getElementById('linkBox').textContent = link;
+    document.getElementById('openBtn').onclick = () => {
+      window.open(link, '_blank');
+    };
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('show');
+    currentToken = "";
+  }
+</script>
+
+</body>
+</html>
